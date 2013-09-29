@@ -16,7 +16,7 @@ MyModule::MyModule()
   _actions[0] = (rem::Action *) malloc(sizeof(rem::Action));
 
   _actions[0]->name = strdup("setLed");
-  _actions[0]->ret = re::NONE;
+  _actions[0]->ret = re::UINT8;
 
   _actions[0]->params = (re::VariableType *) malloc(sizeof(re::VariableType) * 2);
   _actions[0]->params[0] = re::UINT8;

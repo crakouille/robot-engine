@@ -72,8 +72,50 @@ void Module::send_infos()
   Serial.write(&count, 1);
 
   for(re::Uint8 i = 0; i < count; i++) {
-    Serial.write(_actions[i]->name);
-    Serial.write(0); // le \0
+    send_action_info(i);
+    
+  }
+}
+
+void Module::send_action_info(re::Uint8 actionId)
+{
+  // Le nom de l'action
+  Serial.write(_actions[actionId]->name);
+  Serial.write(0); // le \0
+
+  // La valeur de retour
+  Serial.write((unsigned char *) &_actions[actionId]->ret, 1);
+
+  // on envoie le nb d'arguments après l'avoir compté
+
+  re::Uint8 r = 0;
+  
+  if(_actions[actionId]->params) {
+    int i = -1;
+    unsigned char t;
+
+    do {
+      i++;
+      t = (unsigned char) _actions[actionId]->params[i];
+    } while(_actions[actionId]->params[i]);
+    
+    r = (re::Uint8) i;
+  }
+
+  Serial.write(&r, 1);
+
+  // on écrits tous les arguments
+  if(_actions[actionId]->params) {
+    int i = 0;
+    unsigned char t;
+
+    while(_actions[actionId]->params[i]){
+      t = (unsigned char) _actions[actionId]->params[i];
+      Serial.write(&t, 1);
+      i++;
+    }
+  }
+  else {
   }
 }
 

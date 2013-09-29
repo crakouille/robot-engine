@@ -19,6 +19,9 @@ namespace reu {
       bool get_infos();
     
     private:
+
+      void get_infos_get_action();
+
       LTACommunicationDriver *_driver;
   };
 

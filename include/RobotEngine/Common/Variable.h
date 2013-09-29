@@ -27,15 +27,17 @@ namespace re {
     NONE = 0,
     UINT8 = 1,
     UINT16 = 2,
+#ifndef RE_PLATFORM_ARDUINO
     UINT32 = 3,
+#endif
     SINT8 = 4,
     SINT16 = 5,
 #ifndef RE_PLATFORM_ARDUINO
     SINT32 = 6,
 #endif
-    BOOLEAN = 7, // taille UINT8
+    /*BOOLEAN = 7, // taille UINT8
     FLOAT = 8,
-    DOUBLE = 9,
+    DOUBLE = 9,*/
     STRING = 10
   };
 

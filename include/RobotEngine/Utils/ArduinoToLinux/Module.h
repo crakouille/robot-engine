@@ -20,6 +20,8 @@ namespace reu {
       void send_infos();
     
     private:
+
+      void send_action_info(re::Uint8 actionId);
   };
 
   }

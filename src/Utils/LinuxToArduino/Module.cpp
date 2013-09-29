@@ -1,6 +1,7 @@
 #include <RobotEngine/Utils/LinuxToArduino/Module.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 using namespace reu;
 using namespace reu::lta;
@@ -38,7 +39,6 @@ bool Module::get_infos()
 {
   unsigned char buf[1000] = {1};
   int i = 0;
-  re::Sint16 j;
   char n = 0;
   int k;
 
@@ -59,13 +59,99 @@ bool Module::get_infos()
 
   for(i = 0; i < n; i++) { // on lit 
 
-    j = _driver->read_str(buf, 999);
-
-    printf("Action '%s': \n", buf);
+    this->get_infos_get_action();
+    
   }
 
   printf("=== fin get_infos ===.\n");
 
   return 1;
 }
+
+void Module::get_infos_get_action()
+{
+  rem::Action *action = new rem::Action;
+  unsigned char buf[1000] = {1};
+  unsigned char t;
+
+  // on lit le nom de l'action
+  _driver->read_str(buf, 999);
+
+  action->name = strdup((const char *) buf);
+  
+  // on lit le paramètre de retour
+  
+  while(_driver->read(&t, 1) <= 0);
+
+  action->ret = (re::VariableType) t;
+
+  printf("Action: ");
+  switch(t) {
+      case re::NONE:
+        printf("NONE ");
+        break;
+      case re::UINT8:
+        printf("Uint8 ");
+        break;
+      case re::UINT16:
+        printf("Uint16 ");
+        break;
+      case re::SINT8:
+        printf("Sint8 ");
+        break;
+      case re::SINT16:
+        printf("Sint16 ");
+        break;
+      case re::STRING:
+        printf("string ");
+        break;
+      default:
+        break;
+      
+  }
+  printf("'%s'(", buf);
+
+  // on lit le nombre de paramètres
+  
+  while(_driver->read(&t, 1) <= 0);
+
+  int nb = t;
+
+  // on lit les paramètres
+
+  action->params = new re::VariableType[t + 1];
+
+  for(int i = 0; i < nb; i++) {
+    _driver->read(&t, 1);
+    action->params[i] = (re::VariableType) t;
+
+    switch(t) {
+      case re::NONE:
+        printf("NONE ");
+        break;
+      case re::UINT8:
+        printf("Uint8 ");
+        break;
+      case re::UINT16:
+        printf("Uint16 ");
+        break;
+      case re::SINT8:
+        printf("Sint8 ");
+        break;
+      case re::SINT16:
+        printf("Sint16 ");
+        break;
+      case re::STRING:
+        printf("string ");
+        break;
+      default:
+        break;
+      
+    }
+  }
+
+  printf(")\n");
+
+}
+
 
