@@ -35,7 +35,7 @@ namespace rem {
       AbstractModule(); // initialization
       virtual ~AbstractModule();
 
-      virtual void action(int id, re::VariableData **params) = 0; // action ID (0, 1, 2, 3)
+      virtual re::VariableData action(int id, re::VariableData **params) = 0; // action ID (0, 1, 2, 3)
       const char *get_name();
       Action **get_actions();
 

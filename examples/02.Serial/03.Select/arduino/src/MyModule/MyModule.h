@@ -17,7 +17,7 @@ class MyModule : public reu::atl::Module {
 
     void loop();
 
-    void action(int id, re::VariableData **params); // pas d'action
+    re::VariableData action(int id, re::VariableData **params); // pas d'action
 
     void setLed(re::Sint8 ledId, re::Sint8 on);
 

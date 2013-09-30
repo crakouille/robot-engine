@@ -4,7 +4,7 @@
 using namespace reu;
 using namespace reu::atl;
 
-Module::Module()
+Module::Module() : _driver(9600)
 {
   unsigned char c = 42;
   //Serial.write(&c, 1);
@@ -16,34 +16,77 @@ Module::~Module()
   
 }
 
-void Module::action(int id, re::VariableData **params)
+re::VariableData Module::action(int id, re::VariableData **params)
 {
-  
+  re::VariableData ret;
+
+  return ret;
 }
+
+re::VariableData **datas = 0;
+re::VariableData dat[15];
 
 bool Module::read_connection()
 {
   bool ret = 0;
   re::Uint8 c = 0;
+  int i, n, d;
+  
+  if(!datas)
+    datas = (re::VariableData **) malloc(sizeof(re::VariableData *) * 15);
 
   // attente d'une connection
   
-  if(Serial.available() > 0){ // si des données entrantes sont présentes {
+  if(Serial.available() > 0){ // si des données entrantes sont présentes, appel non bloquant
     c = Serial.read();
 
     ret = 1;
 
-    /*switch(c) {
+    switch(c) {
 
       case 1:
-      */  this->send_infos();
-      /*  break;
-
-      default:
-        Serial.write(&c, 1);
-        ret = 0;
+        this->send_infos();
         break;
-    };*/
+      case 2:
+        _driver.read(&c, 1); // on lit le numéro de l'action à exécuter
+        
+        // on calcule le nombre de paramètres
+        n = 0;
+
+        if(_actions[c]->params) {
+          while(_actions[c]->params[n])
+            n++;
+        }
+        
+        // on récupère les paramètres
+        for(i = 0; i < n; i++) {
+          datas[i] = &dat[i];
+          //datas[i]->u8 = 0;
+          d = _actions[c]->params[i];
+
+          switch(d) {
+            case re::NONE:
+              //datas[i].u8 = 1;
+              break;
+            case re::UINT8:
+              _driver.read((void *) &(datas[i]->u8), 1); // appel bloquant
+              //datas[i].u8 = 1;
+              break;
+            default:
+              //datas[i].u8 = 1;
+              break;
+          }
+        }
+
+        datas[n] = 0;
+
+        // exécution de l'action n
+        this->action(c, (re::VariableData **) datas);
+
+        break;
+      default:
+        break;
+    };
     
   }
   else

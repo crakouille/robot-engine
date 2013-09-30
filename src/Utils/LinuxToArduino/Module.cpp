@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 using namespace reu;
 using namespace reu::lta;
@@ -30,14 +31,47 @@ Module::~Module()
   
 }
 
-void Module::action(int id, re::VariableData **params)
+re::VariableData Module::action(int id, re::VariableData **params)
 {
-  
+  re::VariableData ret;
+
+  unsigned char c = 2; // code pour dire que c'est une action à exécuter
+  _driver->send(&c, 1); // on dit qu'on envoie une action
+
+  printf("action id: %d\n", id);
+
+  c = (unsigned char) id;
+
+  _driver->send(&c, 1); // on dit qu'on demande l'action 'id'
+
+  // on envoie tous les arguments
+
+  if(params) {
+    int i = 0;
+
+    while(params[i]) {
+      //printf("hey ! %d\n", i);
+      switch(_actions[id]->params[i]) {
+        case re::UINT8:
+          _driver->send(&(params[i]->u8), 1);
+          break;
+        default:
+          break;
+      }
+      //printf("setg.\n");
+      i ++;
+    }
+
+    // récupérer la valeur de retour dans 'ret'
+  }
+
+  return ret;
 }
 
 bool Module::get_infos()
 {
   unsigned char buf[1000] = {1};
+  rem::Action *bufAction[1000];
   int i = 0;
   char n = 0;
   int k;
@@ -58,17 +92,23 @@ bool Module::get_infos()
   printf("Nombre d'actions: %d\n", n);
 
   for(i = 0; i < n; i++) { // on lit 
-
-    this->get_infos_get_action();
-    
+    bufAction[i] = this->get_infos_get_action();
   }
+
+  _actions = (rem::Action **) malloc(sizeof(rem::Action *) * (n + 1));
+
+  for(i = 0; i < n; i++) { // on lit 
+    _actions[i] = bufAction[i];
+  }
+
+  _actions[n] = nullptr;
 
   printf("=== fin get_infos ===.\n");
 
   return 1;
 }
 
-void Module::get_infos_get_action()
+rem::Action *Module::get_infos_get_action()
 {
   rem::Action *action = new rem::Action;
   unsigned char buf[1000] = {1};
@@ -152,6 +192,7 @@ void Module::get_infos_get_action()
 
   printf(")\n");
 
+  return action;
 }
 
 

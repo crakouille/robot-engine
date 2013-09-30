@@ -24,12 +24,12 @@ void loop()
 {
   char c;
 
+  if(module->read_connection())
+    init_ok = 1;
+  else;
+
   // Tant que ce n'est pas chargé
   if(!init_ok) {
-    if(module->read_connection())
-      init_ok = 1;
-    else;
-
     return;
   }
 

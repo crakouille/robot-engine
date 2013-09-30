@@ -1,10 +1,10 @@
-#include <RobotEngine/Utils/LinuxToArduino/CommunicationDriver.h>
-#include <oacl/oacl.h>
+#include <RobotEngine/Utils/ArduinoToLinux/CommunicationDriver.h>
+#include <Arduino.h>
 
 using namespace reu;
 using namespace reu::atl;
 
-CommunicationDriver::CommunicationDriver(const char *device, int speed)
+CommunicationDriver::CommunicationDriver(int speed)
 {
   
 }
@@ -13,12 +13,12 @@ CommunicationDriver::~CommunicationDriver()
 {
 }
 
-re::Uint16 CommunicationDriver::read(void *p, re::Uint16 maxsize)
+re::Sint16 CommunicationDriver::read(void *p, re::Uint16 maxsize)
 {
-  re::Uint16 i = 0;
+  re::Sint16 i = 0;
   char *q = (char *)p;
 
-  while(i < size) // si des données entrantes sont présentes
+  while(i < maxsize) // si des données entrantes sont présentes
   {
     if(Serial.available() > 0) {
       q[i] = Serial.read();
@@ -35,6 +35,6 @@ re::Uint16 CommunicationDriver::read(void *p, re::Uint16 maxsize)
 
 bool CommunicationDriver::send(const void *p, re::Uint16 size)
 {
-  Serial.write((unsigned int *) p, size);
+  Serial.write((unsigned char *) p, size);
 }
 

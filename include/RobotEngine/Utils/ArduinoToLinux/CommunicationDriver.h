@@ -35,7 +35,7 @@ namespace reu {
         CommunicationDriver(int speed);
         virtual ~CommunicationDriver();
 
-        virtual re::Uint16 read(void *p, re::Uint16 maxsize);
+        virtual re::Sint16 read(void *p, re::Uint16 maxsize);
         virtual bool send(const void *p, re::Uint16 size);
 
       private:

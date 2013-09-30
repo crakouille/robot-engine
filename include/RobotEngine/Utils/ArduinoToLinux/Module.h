@@ -2,6 +2,7 @@
 #define UTILS_ATL_MODULE_H
 
 #include <RobotEngine/Module/AbstractModule.h>
+#include <RobotEngine/Utils/ArduinoToLinux/CommunicationDriver.h>
 
 namespace reu {
   namespace atl {
@@ -13,7 +14,7 @@ namespace reu {
       ~Module();
 
       virtual void loop() = 0;
-      virtual void action(int id, re::VariableData **params) = 0;
+      virtual re::VariableData action(int id, re::VariableData **params) = 0;
 
       bool read_connection();
       // protocole serie
@@ -22,6 +23,8 @@ namespace reu {
     private:
 
       void send_action_info(re::Uint8 actionId);
+
+      CommunicationDriver _driver;
   };
 
   }

@@ -32,16 +32,22 @@ MyModule::~MyModule()
 
 void MyModule::loop()
 {
-  _led->set(1);
-  delay(200.);
-
-  _led->set(0);
-  delay(200.);
+  
 }
 
-void MyModule::action(int id, re::VariableData **params)
+re::VariableData MyModule::action(int id, re::VariableData **params)
 {
-  
+  re::VariableData ret;
+
+  if(id == 0) {
+    _led->set(params[0]->u8); // soit 1 soit 0
+  }/*
+  if(id == 1) {
+    _led->set(0);
+  }*/
+
+
+  return ret;
 }
 
 // Actions
