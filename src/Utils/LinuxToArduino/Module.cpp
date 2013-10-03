@@ -59,9 +59,10 @@ re::VariableData Module::action(int id, re::VariableData **params)
       }
       i ++;
     }
-
-    // récupérer la valeur de re)tour dans 'ret'
   }
+
+  // récupérer la valeur de retour dans 'ret'
+  ret = _driver->read_data(_actions[id]->ret);
 
   return ret;
 }

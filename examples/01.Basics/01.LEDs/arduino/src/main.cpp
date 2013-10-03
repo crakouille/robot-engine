@@ -6,7 +6,6 @@ reu::components::LED *led;
 void setup()
 {
   led = new reu::components::LED(13);
-
 }
 
 void loop()

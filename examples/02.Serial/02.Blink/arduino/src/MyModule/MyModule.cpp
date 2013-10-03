@@ -26,8 +26,10 @@ void MyModule::loop()
   delay(200.);
 }
 
-void MyModule::action(int id, re::VariableData **params)
+re::VariableData MyModule::action(int id, re::VariableData **params)
 {
-  
+  re::VariableData data;
+
+  return data;
 }
 

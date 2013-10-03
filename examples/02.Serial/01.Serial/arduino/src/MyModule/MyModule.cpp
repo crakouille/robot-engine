@@ -22,8 +22,10 @@ void MyModule::loop()
 {
 }
 
-void MyModule::action(int id, re::VariableData **params)
+re::VariableData MyModule::action(int id, re::VariableData **params)
 {
-  
+  re::VariableData data;
+
+  return data;
 }
 

@@ -70,7 +70,8 @@ bool Module::read_connection()
         datas[n] = 0;
 
         // exécution de l'action n
-        this->action(c, (re::VariableData **) datas);
+        t = this->action(c, (re::VariableData **) datas);
+        _driver.send_data(&t, _actions[c]->ret);
 
         break;
       default:

@@ -27,6 +27,5 @@ void loop()
   leds[1]->set(0);
   leds[2]->set(1);
   delay(200.);
-
 }
 
