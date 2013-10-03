@@ -186,7 +186,6 @@ rem::Action *Module::get_infos_get_action()
         break;
       default:
         break;
-      
     }
   }
 

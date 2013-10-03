@@ -9,7 +9,6 @@ INC=-I /usr/lib/gcc/avr/4.7.2/include -I ../../src/ -I $(ARDUINOSRC) -I $(ARDUIN
 -I ../../../../../../include/
 
 SRC=$(call rwildcard, ../../src/, *.cpp) $(call rwildcard, ../../src/, *.c) \
-../../../../../../src/Utils/ArduinoToLinux/Module.cpp \
 ../../../../../../src/Utils/ArduinoComponents/LED.cpp
 
 LIBS=../../../../../../bin/Component/arduino/atmega328p/robotengine.a ../../../../../../bin/Module/arduino/atmega328p/robotengine.a $(ARDUINO_PATH)bin/atmega328p/arduino.a
