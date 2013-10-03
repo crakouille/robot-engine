@@ -50,7 +50,6 @@ re::VariableData Module::action(int id, re::VariableData **params)
     int i = 0;
 
     while(params[i]) {
-      //printf("hey ! %d\n", i);
       switch(_actions[id]->params[i]) {
         case re::UINT8:
           _driver->send(&(params[i]->u8), 1);
@@ -58,11 +57,10 @@ re::VariableData Module::action(int id, re::VariableData **params)
         default:
           break;
       }
-      //printf("setg.\n");
       i ++;
     }
 
-    // récupérer la valeur de retour dans 'ret'
+    // récupérer la valeur de re)tour dans 'ret'
   }
 
   return ret;
@@ -75,6 +73,7 @@ bool Module::get_infos()
   int i = 0;
   char n = 0;
   int k;
+  re::VariableData data;
 
   _driver->send(buf, 1); // demande des infos sur le module
   
@@ -83,8 +82,11 @@ bool Module::get_infos()
   // lecture du nom du composant
 
   // lecture du nom du module
-  printf("%d octets lus\n", _driver->read_str(buf, 999));
-  printf("Module '%s'\n", buf);
+  //_driver->read_str(buf, 999);
+  //printf("Module '%s'\n", buf);
+
+  data = _driver->read_data(re::STRING);
+  printf("Module '%s'\n", data.s);
 
   // lecture du nombre d'actions
   while(_driver->read(&n, 1) <= 0);

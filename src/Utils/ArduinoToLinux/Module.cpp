@@ -7,8 +7,6 @@ using namespace reu::atl;
 Module::Module() : _driver(9600)
 {
   unsigned char c = 42;
-  //Serial.write(&c, 1);
-  //Serial.write(42);
 }
 
 Module::~Module()
@@ -31,6 +29,7 @@ bool Module::read_connection()
   bool ret = 0;
   re::Uint8 c = 0;
   int i, n, d;
+  re::VariableData t;
   
   if(!datas)
     datas = (re::VariableData **) malloc(sizeof(re::VariableData *) * 15);
@@ -38,7 +37,7 @@ bool Module::read_connection()
   // attente d'une connection
   
   if(Serial.available() > 0){ // si des données entrantes sont présentes, appel non bloquant
-    c = Serial.read();
+    _driver.read(&c, 1);
 
     ret = 1;
 
@@ -64,18 +63,8 @@ bool Module::read_connection()
           //datas[i]->u8 = 0;
           d = _actions[c]->params[i];
 
-          switch(d) {
-            case re::NONE:
-              //datas[i].u8 = 1;
-              break;
-            case re::UINT8:
-              _driver.read((void *) &(datas[i]->u8), 1); // appel bloquant
-              //datas[i].u8 = 1;
-              break;
-            default:
-              //datas[i].u8 = 1;
-              break;
-          }
+          t = _driver.read_data((re::VariableType) d);
+          datas[i]->u8 = t.u8;
         }
 
         datas[n] = 0;
@@ -98,6 +87,8 @@ bool Module::read_connection()
 void Module::send_infos()
 {
   re::Uint8 count = 0;
+  re::VariableData data;
+  char s[] = "no name to this module";
 
   if(_actions) {
     for(; _actions[count] != 0; count ++);
@@ -105,11 +96,14 @@ void Module::send_infos()
 
   // écriture du nom du module
   if(_name)
-    Serial.write((unsigned char *) _name, strlen(_name));
+    data.s = _name;
+    //Serial.write((unsigned char *) _name, strlen(_name));
   else
-    Serial.write((unsigned char *) "no name to this module", 22);
+    data.s = s;
+    //Serial.write((unsigned char *) "no name to this module", 22);
 
-  Serial.write(0);
+  _driver.send_data(&data, re::STRING);
+  //Serial.write(0);
 
   // écriture du nombre d'actions
   Serial.write(&count, 1);

@@ -18,7 +18,7 @@ using namespace reu::lta;
 
 LTACommunicationDriver::LTACommunicationDriver(const char *device, int speed)
 {
-  _device = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
+  _device = open(device, O_RDWR | O_NOCTTY);// | O_NONBLOCK);
 
   if(_device < 0) {
     printf("Erreur: Périphérique %s non ouvert (sudo manquant ?).\n", device);
@@ -125,7 +125,17 @@ LTACommunicationDriver::~LTACommunicationDriver()
 
 re::Sint16 LTACommunicationDriver::read(void *p, re::Uint16 maxsize)
 {
-  return (re::Sint16) ::read(_device, p, maxsize);
+  int i = 0, j;
+  re::Uint8 *c = (re::Uint8 *) p;
+
+  for(i = 0; i < maxsize; ) {
+    j = ::read(_device, &c[i], maxsize - i);
+
+    if(j > 0)
+      i += j;
+  }
+
+  return i;
 }
 
 re::Sint16 LTACommunicationDriver::read_str(void *p, re::Uint16 maxsize)
