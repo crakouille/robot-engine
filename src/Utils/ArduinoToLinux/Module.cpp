@@ -116,9 +116,13 @@ void Module::send_infos()
 
 void Module::send_action_info(re::Uint8 actionId)
 {
+  re::VariableData v;
+  
+  v.s = _actions[actionId]->name;
+  _driver.send_data(&v, re::STRING);
   // Le nom de l'action
-  Serial.write(_actions[actionId]->name);
-  Serial.write(0); // le \0
+  //Serial.write(_actions[actionId]->name);
+  //Serial.write(0); // le \0
 
   // La valeur de retour
   Serial.write((unsigned char *) &_actions[actionId]->ret, 1);

@@ -138,27 +138,6 @@ re::Sint16 LTACommunicationDriver::read(void *p, re::Uint16 maxsize)
   return i;
 }
 
-re::Sint16 LTACommunicationDriver::read_str(void *p, re::Uint16 maxsize)
-{
-  re::Sint16 i = 0, j;
-  re::Uint8 *q = (re::Uint8 *) p;
-
-  for(i = 0; i < maxsize; ) {
-    
-    j = ::read(_device, &q[i], 1);
-
-    if(j > 0) {
-      i += j;
-      if(!q[i - 1])
-        break;
-      else;
-    }
-    else;
-  }
-
-  return i;
-}
-
 bool LTACommunicationDriver::send(const void *p, re::Uint16 size)
 {
   re::Uint16 size2;

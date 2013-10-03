@@ -38,8 +38,6 @@ namespace reu {
         virtual re::Sint16 read(void *p, re::Uint16 maxsize);
         virtual bool send(const void *p, re::Uint16 size);
 
-        re::Sint16 read_str(void *p, re::Uint16 maxsize);
-
       private:
 
         int _device;

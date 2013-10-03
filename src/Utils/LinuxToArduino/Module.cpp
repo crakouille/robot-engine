@@ -82,8 +82,6 @@ bool Module::get_infos()
   // lecture du nom du composant
 
   // lecture du nom du module
-  //_driver->read_str(buf, 999);
-  //printf("Module '%s'\n", buf);
 
   data = _driver->read_data(re::STRING);
   printf("Module '%s'\n", data.s);
@@ -113,17 +111,17 @@ bool Module::get_infos()
 rem::Action *Module::get_infos_get_action()
 {
   rem::Action *action = new rem::Action;
-  unsigned char buf[1000] = {1};
   unsigned char t;
+  re::VariableData v;
 
   // on lit le nom de l'action
-  _driver->read_str(buf, 999);
-
-  action->name = strdup((const char *) buf);
+  //_driver->read_str(buf, 999);
+  v = _driver->read_data(re::STRING);
+  action->name = v.s; //strdup((const char *) buf);
   
   // on lit le paramètre de retour
   
-  while(_driver->read(&t, 1) <= 0);
+  _driver->read(&t, 1);
 
   action->ret = (re::VariableType) t;
 
@@ -151,7 +149,7 @@ rem::Action *Module::get_infos_get_action()
         break;
       
   }
-  printf("'%s'(", buf);
+  printf("'%s'(", v.s);
 
   // on lit le nombre de paramètres
   
