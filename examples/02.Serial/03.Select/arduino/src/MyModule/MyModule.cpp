@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <RobotEngine/Component/Component.h>
 #include "MyModule/MyModule.h"
 
 #define NB_ACTIONS 1
@@ -8,19 +7,6 @@ MyModule::MyModule()
 {
   // définition du module
   _name = strdup("MyBlinkModule");
-  _actions = 0;
-
-  _actions = (rem::Action **) malloc(sizeof(rem::Action *) * (NB_ACTIONS + 1));
-  _actions[NB_ACTIONS] = 0;
-
-  _actions[0] = (rem::Action *) malloc(sizeof(rem::Action));
-
-  _actions[0]->name = strdup("setLed");
-  _actions[0]->ret = re::UINT8;
-
-  _actions[0]->params = (re::VariableType *) malloc(sizeof(re::VariableType) * 2);
-  _actions[0]->params[0] = re::UINT8;
-  _actions[0]->params[1] = re::NONE;
 
   _led = new reu::components::LED(13);
 }
@@ -35,17 +21,15 @@ void MyModule::loop()
   
 }
 
-re::VariableData MyModule::action(int id, re::VariableData **params)
+re::Buffer MyModule::action(int id, re::Buffer *params_buf) // pas d'action
 {
-  re::VariableData ret;
+  re::Buffer ret = {0};
+
+  re::Uint8 *p = (re::Uint8 *) params_buf->datas;
 
   if(id == 0) {
-    _led->set(params[0]->u8); // soit 1 soit 0
-  }/*
-  if(id == 1) {
-    _led->set(0);
-  }*/
-
+    _led->set(p[0]); // soit 1 soit 0
+  }
 
   return ret;
 }

@@ -23,7 +23,12 @@ namespace re {
 	typedef uint32_t Uint32;
 #endif
 
-  enum VariableType {
+  struct Buffer {
+    void *datas;
+    Uint16 size;
+  };
+
+  /*enum VariableType {
     NONE = 0,
     UINT8 = 1,
     UINT16 = 2,
@@ -35,9 +40,6 @@ namespace re {
 #ifndef RE_PLATFORM_ARDUINO
     SINT32 = 6,
 #endif
-    /*BOOLEAN = 7, // taille UINT8
-    FLOAT = 8,
-    DOUBLE = 9,*/
     STRING = 10
   };
 
@@ -62,12 +64,7 @@ namespace re {
     char *s;
     Uint8 b;
   };
-
-  /*struct Variable {
-    char *name;
-    VariableType type;
-    VariableData data;
-  };*/
+*/
 }
 
 #endif

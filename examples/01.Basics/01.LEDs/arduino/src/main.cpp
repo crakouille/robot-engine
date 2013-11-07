@@ -11,6 +11,6 @@ void setup()
 void loop()
 {
   led->set(1);
-  delay(100);
+  delay(500);
 }
 

@@ -12,10 +12,10 @@ void setup()
 void loop()
 {
   led->set(1);
-  delay(200.);
+  delay(1000.);
 
   led->set(0);
-  delay(200.);
+  delay(1000.);
 }
 
 

@@ -1,6 +1,7 @@
 #ifndef MY_MODULE_H
 #define MY_MODULE_H
 
+#include <RobotEngine/Module/AbstractComponent.h>
 #include <RobotEngine/Module/Module.h>
 #include <RobotEngine/Utils/ArduinoToLinux/Module.h>
 /*
@@ -16,7 +17,7 @@ class MyModule : public reu::atl::Module {
 
     void loop();
 
-    re::VariableData action(int id, re::VariableData **params); // pas d'action
+    re::Buffer action(int id, re::Buffer *params_buf);
 
   private:
 };

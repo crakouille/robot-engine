@@ -4,7 +4,6 @@
 #include <RobotEngine/Common/Platform.h>
 #include <RobotEngine/Common/Variable.h>
 #include <RobotEngine/Common/AbstractCommunicationDriver.h>
-#include <RobotEngine/Common/AbstractComponent.h>
 
 #endif
 

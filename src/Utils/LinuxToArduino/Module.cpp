@@ -12,17 +12,8 @@ Module::Module(LTACommunicationDriver *driver)
   //sleep(2); // cf http://playground.arduino.cc/interfacing/python
   // c'est même mis dedans ...
 
-  //char c;
-  re::Sint16 ok = 0;
   _driver = driver;
 
-  //while(_driver->read(&c, 1) <= 0) // on attend le premier caractère
-  //  ;
-
-  //printf("c = %d\n", c);// -> 42 
-
-  //while(ok <= 0)
-  //  ok = this->get_infos();
   this->get_infos();
 }
 
@@ -31,168 +22,55 @@ Module::~Module()
   
 }
 
-re::VariableData Module::action(int id, re::VariableData **params)
+re::Buffer Module::action(int id, re::Buffer *params_buf)
 {
-  re::VariableData ret;
+  re::Buffer ret = {0};
+  re::Buffer buf = {0};
 
-  unsigned char c = 2; // code pour dire que c'est une action à exécuter
-  _driver->send(&c, 1); // on dit qu'on envoie une action
+  // code pour dire que c'est une action à exécuter
 
-  printf("action id: %d\n", id);
+  unsigned char c = 2;
+  buf.datas = &c;
+  buf.size = 1;
+
+  _driver->send(&buf); // on dit qu'on envoie une action
+
+  // on envoie le numéro de l'action
+//  printf("action id: %d\n", id);
 
   c = (unsigned char) id;
 
-  _driver->send(&c, 1); // on dit qu'on demande l'action 'id'
+  _driver->send(&buf); // on dit qu'on demande l'action 'id'
 
   // on envoie tous les arguments
 
-  if(params) {
-    int i = 0;
-
-    while(params[i]) {
-      switch(_actions[id]->params[i]) {
-        case re::UINT8:
-          _driver->send(&(params[i]->u8), 1);
-          break;
-        default:
-          break;
-      }
-      i ++;
-    }
-  }
-
+  _driver->send(params_buf);
+  
   // récupérer la valeur de retour dans 'ret'
-  ret = _driver->read_data(_actions[id]->ret);
+  _driver->read(&ret);
 
   return ret;
 }
 
 bool Module::get_infos()
 {
-  unsigned char buf[1000] = {1};
-  rem::Action *bufAction[1000];
+  re::Buffer buf = {0};
+  unsigned char c = 1;
   int i = 0;
   char n = 0;
   int k;
-  re::VariableData data;
 
-  _driver->send(buf, 1); // demande des infos sur le module
-  
-  buf[0] = 0;
+  buf.datas = &c;
+  buf.size = 1;
 
-  // lecture du nom du composant
+  _driver->send(&buf); // demande les infos 
+  buf.size = 0;
+  buf.datas = 0;
 
-  // lecture du nom du module
+  _driver->read(&buf); // demande des infos sur le module
 
-  data = _driver->read_data(re::STRING);
-  printf("Module '%s'\n", data.s);
-
-  // lecture du nombre d'actions
-  while(_driver->read(&n, 1) <= 0);
-
-  printf("Nombre d'actions: %d\n", n);
-
-  for(i = 0; i < n; i++) { // on lit 
-    bufAction[i] = this->get_infos_get_action();
-  }
-
-  _actions = (rem::Action **) malloc(sizeof(rem::Action *) * (n + 1));
-
-  for(i = 0; i < n; i++) { // on lit 
-    _actions[i] = bufAction[i];
-  }
-
-  _actions[n] = nullptr;
-
-  printf("=== fin get_infos ===.\n");
+  //printf("Module '%s'\n", (char *) (buf.datas));
 
   return 1;
 }
-
-rem::Action *Module::get_infos_get_action()
-{
-  rem::Action *action = new rem::Action;
-  unsigned char t;
-  re::VariableData v;
-
-  // on lit le nom de l'action
-  //_driver->read_str(buf, 999);
-  v = _driver->read_data(re::STRING);
-  action->name = v.s; //strdup((const char *) buf);
-  
-  // on lit le paramètre de retour
-  
-  _driver->read(&t, 1);
-
-  action->ret = (re::VariableType) t;
-
-  printf("Action: ");
-  switch(t) {
-      case re::NONE:
-        printf("NONE ");
-        break;
-      case re::UINT8:
-        printf("Uint8 ");
-        break;
-      case re::UINT16:
-        printf("Uint16 ");
-        break;
-      case re::SINT8:
-        printf("Sint8 ");
-        break;
-      case re::SINT16:
-        printf("Sint16 ");
-        break;
-      case re::STRING:
-        printf("string ");
-        break;
-      default:
-        break;
-      
-  }
-  printf("'%s'(", v.s);
-
-  // on lit le nombre de paramètres
-  
-  while(_driver->read(&t, 1) <= 0);
-
-  int nb = t;
-
-  // on lit les paramètres
-
-  action->params = new re::VariableType[t + 1];
-
-  for(int i = 0; i < nb; i++) {
-    _driver->read(&t, 1);
-    action->params[i] = (re::VariableType) t;
-
-    switch(t) {
-      case re::NONE:
-        printf("NONE ");
-        break;
-      case re::UINT8:
-        printf("Uint8 ");
-        break;
-      case re::UINT16:
-        printf("Uint16 ");
-        break;
-      case re::SINT8:
-        printf("Sint8 ");
-        break;
-      case re::SINT16:
-        printf("Sint16 ");
-        break;
-      case re::STRING:
-        printf("string ");
-        break;
-      default:
-        break;
-    }
-  }
-
-  printf(")\n");
-
-  return action;
-}
-
 

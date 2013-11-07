@@ -1,20 +1,17 @@
 #ifndef UTILS_ATL_COMPONENTS_LED_H
 #define UTILS_ATL_COMPONENTS_LED_H
 
-#include <RobotEngine/Component/Component.h>
+#include <RobotEngine/Module/AbstractComponent.h>
 
 namespace reu {
   namespace components {
 
-  class LED : public rec::AbstractComponent {
+  class LED : public rem::AbstractComponent {
     public:
 
       LED(re::Sint16 pin_id, bool analog = 0);
       ~LED();
-
-      re::VariableData *call(re::VariableData **vars);
-
-      // 
+      
       void set(bool on);
       void set_analog(re::Uint8 value);
     

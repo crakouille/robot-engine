@@ -27,6 +27,12 @@ upload:
   -c arduino \
  -e -U flash:w:main.hex
 
+uploadisp:
+	avrdude -p m328p \
+  -P usb \
+  -c avrispmkII \
+  -e -U flash:w:main.hex
+
 clean:
 	rm main.elf
 	rm main.hex

@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <RobotEngine/Component/Component.h>
 #include "MyModule/MyModule.h"
 
 /*
@@ -15,14 +14,15 @@ void setup()
 
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
+  pinMode(3, OUTPUT);
 }
 
 int init_ok = 0;
 
-
 void loop()
 {
   char c;
+
 
   if(!init_ok) {
     if(module->read_connection())

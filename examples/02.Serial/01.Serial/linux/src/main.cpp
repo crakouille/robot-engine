@@ -13,6 +13,8 @@ int main(int argc, char **argv)
   reu::lta::LTACommunicationDriver cd("/dev/ttyACM0", 9600);
   sleep(2); // cf http://playground.arduino.cc/interfacing/python
 
+  printf("test\n");
+
   module = new reu::lta::Module(&cd); // on déclare le module avec ce driver
   
   delete module;

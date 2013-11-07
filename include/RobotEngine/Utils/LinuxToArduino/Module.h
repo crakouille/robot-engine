@@ -13,14 +13,12 @@ namespace reu {
       Module(LTACommunicationDriver *driver);
       ~Module();
 
-      re::VariableData action(int id, re::VariableData **params);
+      re::Buffer action(int id, re::Buffer *params_buf);
 
       // protocole serie
       bool get_infos();
     
     private:
-
-      rem::Action *get_infos_get_action();
 
       LTACommunicationDriver *_driver;
   };

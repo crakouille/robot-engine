@@ -11,7 +11,7 @@ INC=-I /usr/lib/gcc/avr/4.7.2/include -I ../../src/ -I $(ARDUINOSRC) -I $(ARDUIN
 SRC=$(call rwildcard, ../../src/, *.cpp) $(call rwildcard, ../../src/, *.c) \
 ../../../../../../src/Utils/ArduinoComponents/LED.cpp
 
-LIBS=../../../../../../bin/Component/arduino/atmega328p/robotengine.a ../../../../../../bin/Module/arduino/atmega328p/robotengine.a $(ARDUINO_PATH)bin/atmega328p/arduino.a
+LIBS=$(ARDUINO_PATH)bin/atmega328p/arduino.a ../../../../../../bin/Component/arduino/atmega328p/robotengine.a ../../../../../../bin/Module/arduino/atmega328p/robotengine.a 
 
 all: compile upload
 
@@ -24,6 +24,12 @@ upload:
   -P /dev/ttyACM0 \
   -c arduino \
  -e -U flash:w:main.hex
+
+uploadisp:
+	avrdude -p m328p \
+  -P usb \
+  -c avrispmkII \
+  -e -U flash:w:main.hex
 
 clean:
 	rm main.elf

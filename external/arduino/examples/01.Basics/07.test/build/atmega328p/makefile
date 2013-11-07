@@ -20,12 +20,6 @@ upload:
   -c arduino \
  -e -U flash:w:main.hex
 
-uploadisp:
-	avrdude -p m328p -b 9600 \
-  -P /dev/ttyACM0 \
-  -c avrispmkII \
- -e -U flash:w:main.hex
-
 clean:
 	rm main.elf
 	rm main.hex

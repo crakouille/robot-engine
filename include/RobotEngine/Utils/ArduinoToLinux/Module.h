@@ -14,7 +14,7 @@ namespace reu {
       ~Module();
 
       virtual void loop() = 0;
-      virtual re::VariableData action(int id, re::VariableData **params) = 0;
+      virtual re::Buffer action(int id, re::Buffer *params_buf) = 0;
 
       bool read_connection();
       // protocole serie

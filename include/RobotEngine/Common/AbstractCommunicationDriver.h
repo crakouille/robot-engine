@@ -10,11 +10,13 @@ namespace re {
   
       virtual ~AbstractCommunicationDriver();
 
-      virtual Sint16 read(void *p, Uint16 maxsize) = 0; // read exactly maxsize
-      virtual bool send(const void *p, Uint16 size) = 0;
+      bool read(re::Buffer *buf); // send false if there is a checksum error
+      void send(re::Buffer *buf);
 
-      VariableData read_data(re::VariableType type);
-      void send_data(VariableData *data, re::VariableType type);
+    protected:
+
+      virtual Sint16 read2(void *p, Uint16 maxsize) = 0; // read exactly maxsize
+      virtual bool send2(const void *p, Uint16 size) = 0;
   };
 }
 

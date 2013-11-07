@@ -6,7 +6,7 @@ using namespace reu::atl;
 
 Module::Module() : _driver(9600)
 {
-  unsigned char c = 42;
+
 }
 
 Module::~Module()
@@ -14,30 +14,24 @@ Module::~Module()
   
 }
 
-re::VariableData Module::action(int id, re::VariableData **params)
-{
-  re::VariableData ret;
-
-  return ret;
-}
-
-re::VariableData **datas = 0;
-re::VariableData dat[15];
-
 bool Module::read_connection()
 {
   bool ret = 0;
   re::Uint8 c = 0;
+  re::Uint8 *p8;
   int i, n, d;
-  re::VariableData t;
+  re::Buffer buf = {0};
   
-  if(!datas)
-    datas = (re::VariableData **) malloc(sizeof(re::VariableData *) * 15);
-
   // attente d'une connection
   
   if(Serial.available() > 0){ // si des données entrantes sont présentes, appel non bloquant
-    _driver.read(&c, 1);
+
+    
+  digitalWrite(3, HIGH);
+    //_driver.read(&c, 1);
+    _driver.read(&buf);
+    p8 = (re::Uint8 *) buf.datas;
+    c = *p8;
 
     ret = 1;
 
@@ -47,31 +41,14 @@ bool Module::read_connection()
         this->send_infos();
         break;
       case 2:
-        _driver.read(&c, 1); // on lit le numéro de l'action à exécuter
+        _driver.read(&buf);  // on lit le numéro de l'action à exécuter
+        p8 = (re::Uint8 *) buf.datas;
+        c = *p8;
+      
+        _driver.read(&buf); // on récupère les paramètres
         
-        // on calcule le nombre de paramètres
-        n = 0;
-
-        if(_actions[c]->params) {
-          while(_actions[c]->params[n])
-            n++;
-        }
-        
-        // on récupère les paramètres
-        for(i = 0; i < n; i++) {
-          datas[i] = &dat[i];
-          //datas[i]->u8 = 0;
-          d = _actions[c]->params[i];
-
-          t = _driver.read_data((re::VariableType) d);
-          datas[i]->u8 = t.u8;
-        }
-
-        datas[n] = 0;
-
-        // exécution de l'action n
-        t = this->action(c, (re::VariableData **) datas);
-        _driver.send_data(&t, _actions[c]->ret);
+        buf = this->action(c, &buf); // exécution de l'action n
+        _driver.send(&buf); // on envoie la valeur de retour
 
         break;
       default:
@@ -82,82 +59,26 @@ bool Module::read_connection()
   else
     ;
 
+  if(buf.size > 0)
+    free(buf.datas);
+
   return ret;
 }
 
 void Module::send_infos()
 {
   re::Uint8 count = 0;
-  re::VariableData data;
+  re::Buffer buf = {0};
   char s[] = "no name to this module";
-
-  if(_actions) {
-    for(; _actions[count] != 0; count ++);
-  }
 
   // écriture du nom du module
   if(_name)
-    data.s = _name;
-    //Serial.write((unsigned char *) _name, strlen(_name));
+    buf.datas = _name;
   else
-    data.s = s;
-    //Serial.write((unsigned char *) "no name to this module", 22);
-
-  _driver.send_data(&data, re::STRING);
-  //Serial.write(0);
-
-  // écriture du nombre d'actions
-  Serial.write(&count, 1);
-
-  for(re::Uint8 i = 0; i < count; i++) {
-    send_action_info(i);
-    
-  }
-}
-
-void Module::send_action_info(re::Uint8 actionId)
-{
-  re::VariableData v;
+    buf.datas = s;
   
-  v.s = _actions[actionId]->name;
-  _driver.send_data(&v, re::STRING);
-  // Le nom de l'action
-  //Serial.write(_actions[actionId]->name);
-  //Serial.write(0); // le \0
+  buf.size = strlen((char *) buf.datas) + 1;
 
-  // La valeur de retour
-  Serial.write((unsigned char *) &_actions[actionId]->ret, 1);
-
-  // on envoie le nb d'arguments après l'avoir compté
-
-  re::Uint8 r = 0;
-  
-  if(_actions[actionId]->params) {
-    int i = -1;
-    unsigned char t;
-
-    do {
-      i++;
-      t = (unsigned char) _actions[actionId]->params[i];
-    } while(_actions[actionId]->params[i]);
-    
-    r = (re::Uint8) i;
-  }
-
-  Serial.write(&r, 1);
-
-  // on écrits tous les arguments
-  if(_actions[actionId]->params) {
-    int i = 0;
-    unsigned char t;
-
-    while(_actions[actionId]->params[i]){
-      t = (unsigned char) _actions[actionId]->params[i];
-      Serial.write(&t, 1);
-      i++;
-    }
-  }
-  else {
-  }
+  _driver.send(&buf);
 }
 

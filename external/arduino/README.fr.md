@@ -27,10 +27,7 @@ Les dépendances sont:
 
 ####Ubuntu
 ==========
-sudo apt-get install binutils-avr 
-sudo apt-get install gcc-avr
-sudo apt-get install avr-libc
-sudo apt-get install avrdude
+sudo apt-get install binutils-avr gcc-avr avr-libc avrdude
 
 Pour plus d'informations, http://gcc.gnu.org/wiki/avr-gcc
 

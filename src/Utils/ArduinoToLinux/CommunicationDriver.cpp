@@ -13,7 +13,7 @@ CommunicationDriver::~CommunicationDriver()
 {
 }
 
-re::Sint16 CommunicationDriver::read(void *p, re::Uint16 maxsize)
+re::Sint16 CommunicationDriver::read2(void *p, re::Uint16 maxsize)
 {
   re::Sint16 i = 0;
   char *q = (char *)p;
@@ -33,7 +33,7 @@ re::Sint16 CommunicationDriver::read(void *p, re::Uint16 maxsize)
 
 // if (serialEventRun) serialEventRun();
 
-bool CommunicationDriver::send(const void *p, re::Uint16 size)
+bool CommunicationDriver::send2(const void *p, re::Uint16 size)
 {
   Serial.write((unsigned char *) p, size);
 }

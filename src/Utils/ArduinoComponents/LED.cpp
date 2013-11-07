@@ -27,13 +27,3 @@ void LED::set_analog(re::Uint8 value)
   analogWrite(_pin_id, value);
 }
 
-re::VariableData *LED::call(re::VariableData **vars)
-{
-  if(_is_analog)
-    analogWrite(_pin_id, (*vars)[0].s16);
-  else
-    digitalWrite(_pin_id, (*vars)[0].s16);
-  
-  return 0;
-}
-
