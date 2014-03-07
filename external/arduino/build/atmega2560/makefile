@@ -8,14 +8,14 @@ INC=-I /usr/lib/gcc/avr/4.7.2/include -I ../../include -I $(ARDUINOSRC) -I $(ARD
 SRCCPP=$(call rwildcard, ../../src/, *.cpp) $(call rwildcard, $(ARDUINOSRC), *.cpp)
 SRCC=$(call rwildcard, $(ARDUINOSRC), *.c)
 OBJ=$(SRCCPP:.cpp=.o) $(SRCC:.c=.o)
-DEST=../../bin/atmega168/arduino.a
-CCONSTANTS=-D__AVR_ATmega168__ -DF_CPU=16000000UL
-MMCU=-mmcu=atmega168
+DEST=../../bin/atmega2560/arduino.a
+CCONSTANTS=-D__AVR_ATmega2560__ -DF_CPU=16000000UL
+MMCU=-mmcu=atmega2560
 
 all: oacl clean
 
 oacl: $(OBJ)
-	mkdir -p ../../bin/atmega168/
+	mkdir -p ../../bin/atmega2560/
 	avr-ar rcsv $(DEST) $(OBJ)
 
 %.o: %.cpp

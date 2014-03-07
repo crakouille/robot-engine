@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <RobotEngine/Component/Component.h>
 #include "MyModule/MyModule.h"
 
 
@@ -7,7 +6,6 @@ MyModule::MyModule()
 {
   // définition du module
   _name = strdup("MyBlinkModule");
-  _actions = 0;
 
   _led = new reu::components::LED(13);
 }
@@ -26,10 +24,10 @@ void MyModule::loop()
   delay(200.);
 }
 
-re::VariableData MyModule::action(int id, re::VariableData **params)
+re::Buffer MyModule::action(int id, re::Buffer *params_buf)
 {
-  re::VariableData data;
+  re::Buffer buf = {0};
 
-  return data;
+  return buf;
 }
 

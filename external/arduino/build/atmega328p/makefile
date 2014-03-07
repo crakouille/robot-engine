@@ -12,6 +12,8 @@ DEST=../../bin/atmega328p/arduino.a
 CCONSTANTS=-D__AVR_ATmega328p__ -DF_CPU=16000000UL
 MMCU=-mmcu=atmega328p
 
+all: oacl clean
+
 oacl: $(OBJ)
 	mkdir -p ../../bin/atmega328p/
 	avr-ar rcsv $(DEST) $(OBJ)

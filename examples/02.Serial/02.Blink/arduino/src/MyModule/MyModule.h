@@ -17,7 +17,7 @@ class MyModule : public reu::atl::Module {
 
     void loop();
 
-    re::VariableData action(int id, re::VariableData **params); // pas d'action
+    re::Buffer action(int id, re::Buffer *params_buf); // pas d'action
 
   private:
 

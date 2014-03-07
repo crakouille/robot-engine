@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <RobotEngine/Component/Component.h>
 #include "MyModule/MyModule.h"
 
 /*
